@@ -1,0 +1,5 @@
+otter-grader
+playwright
+ipykernel
+jupyter
+jupyter_client

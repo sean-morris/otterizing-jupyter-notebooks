@@ -1,0 +1,62 @@
+name: Run Otter Assign
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - raw_notebooks/**
+  pull_request:
+
+env: 
+  NOTEBOOK_DIR: raw_notebooks
+  OUTPUT_DIR: generated_notebooks
+  REQUIREMENTS_FILE: requirements.txt
+  REPO_FOR_PUSH: sean-morris/otterizing-jupyter-notebooks.git
+  SCRIPT_PATH: .github/scripts
+
+jobs:
+  otter-assign:
+    runs-on: ubuntu-latest
+    container:
+      image: seansmorris/ubuntu-playwright:latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v3
+       
+    - name: Create virtual environment
+      run: |
+        python3 -m venv venv
+        source venv/bin/activate
+    
+    - name: Cache pip
+      uses: actions/cache@v3
+      with:
+        path: venv
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/$REQUIREMENTS_FILE') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+  
+    - name: Config virtual environment
+      run: |
+        bash $SCRIPT_PATH/config_env.sh
+    
+    - name: Run otter assign changed subfolders
+      run: |
+        source venv/bin/activate
+        python3 $SCRIPT_PATH/process_otterrize_notebooks.py
+  
+    - name: Commit and push changes
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+        git add .
+        git commit -m "Automated commit from GitHub Action"
+        git remote set-url origin https://$GITHUB_TOKEN@github.com/$REPO_FOR_PUSH
+        git push origin main
+        #$SCRIPT_PATH/handle_git.sh
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

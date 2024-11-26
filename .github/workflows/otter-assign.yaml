@@ -23,12 +23,18 @@ jobs:
     defaults:
       run:
         shell: bash
+
     steps:
     - name: Check out repository
       uses: actions/checkout@v3
       with:
         fetch-depth: 0 
-       
+
+    - name: Set GIT_SAFE_DIRS
+      run: |
+        export GIT_SAFE_DIRS="/__w/otterizing-jupyter-notebooks/otterizing-jupyter-notebooks"
+        git config --global --add safe.directory /__w/otterizing-jupyter-notebooks/otterizing-jupyter-notebooks
+
     - name: Create virtual environment
       run: |
         python3 -m venv venv
@@ -42,6 +48,10 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pip-
   
+    - name: Install Chromium via Playwright
+      run: |
+        playwright install chromium
+
     - name: Config virtual environment
       run: |
         bash $SCRIPT_PATH/config_env.sh
@@ -59,6 +69,5 @@ jobs:
         git commit -m "Automated commit from GitHub Action"
         git remote set-url origin https://$GITHUB_TOKEN@github.com/$REPO_FOR_PUSH
         git push origin main
-        #$SCRIPT_PATH/handle_git.sh
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

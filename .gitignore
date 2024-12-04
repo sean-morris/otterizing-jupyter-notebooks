@@ -1,4 +1,4 @@
 .DS_Store
-venv*/
 .secrets
-p3*/
+setup_env.sh
+venv/

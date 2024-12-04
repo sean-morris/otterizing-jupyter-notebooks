@@ -68,6 +68,6 @@ jobs:
         git add .
         git commit -m "Automated commit from GitHub Action"
         git remote set-url origin https://$GITHUB_TOKEN@github.com/$REPO_FOR_PUSH
-        git push origin main
+        #git push origin main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

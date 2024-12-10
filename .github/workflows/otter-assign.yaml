@@ -61,6 +61,12 @@ jobs:
         source venv/bin/activate
         python3 $SCRIPT_PATH/process_otterrize_notebooks.py
   
+    - name: Clean MetaData from notebooks
+      run: |
+        source venv/bin/activate
+        nb-clean clean $NOTEBOOK_DIR/ -o -e  
+        nb-clean clean $OUTPUT_DIR/ -o -e
+
     - name: Commit and push changes
       run: |
         git config --global user.name "GitHub Actions"

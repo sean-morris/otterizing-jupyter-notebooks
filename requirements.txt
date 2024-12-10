@@ -1,3 +1,4 @@
 otter-grader
 ipykernel
 datascience
+nb-clean

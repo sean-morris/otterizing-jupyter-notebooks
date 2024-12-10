@@ -32,6 +32,16 @@ def get_changed_files():
     return result.stdout.splitlines()
 
 
+def run_nbconvert(notebook):
+    subprocess.run(
+        [
+            "jupyter", "nbconvert", "--to", "notebook",
+            "--execute", "--ExecutePreprocessor.allow_errors=True", notebook, "--output", os.path.basename(notebook)
+        ],
+        check=True
+    )
+
+
 def process_subfolders(folders_to_otterize, notebook_dir, output_dir):
     """
     Process subfolders, check if changes are detected, and run otter assign.
@@ -45,6 +55,7 @@ def process_subfolders(folders_to_otterize, notebook_dir, output_dir):
         noteboooks = get_ipynb_files(full_folder_path)
         try:
             for notebook in noteboooks:
+                run_nbconvert(notebook)
                 subprocess.run(
                     [
                         "python3", "-m", "otter", "assign",

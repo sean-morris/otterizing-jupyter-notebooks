@@ -27,6 +27,7 @@ RUN apt-get update && apt-get install -y \
     libnspr4 \
     python3.12-venv \
     xdg-utils \
+    zstd \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install Node.js (required for Playwright)

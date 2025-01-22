@@ -34,14 +34,17 @@ jobs:
       uses: actions/checkout@v3
       with:
         fetch-depth: 0 
-
+    
     - name: Cache pip dependencies
+      if: ${{ env.GITHUB_TOKEN }}
       uses: actions/cache@v3
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
     - name: Set GIT_SAFE_DIRS
       run: |
@@ -52,7 +55,6 @@ jobs:
     - name: Create virtual environment
       run: |
         python3 -m venv venv
-        source venv/bin/activate
       
     - name: Install Chromium via Playwright
       run: |
@@ -61,8 +63,6 @@ jobs:
     - name: Config virtual environment
       run: |
         bash $SCRIPT_PATH/config_env.sh
-      env:
-        CACHE_DIR: ~/.cache/pip
     
     - name: Run otter assign changed subfolders
       run: |
@@ -76,6 +76,7 @@ jobs:
         nb-clean clean $OUTPUT_DIR/ -o -e
 
     - name: Commit and push changes
+      if: ${{ env.GITHUB_TOKEN }}
       run: |
         git config --global user.name "GitHub Actions"
         git config --global user.email "actions@github.com"

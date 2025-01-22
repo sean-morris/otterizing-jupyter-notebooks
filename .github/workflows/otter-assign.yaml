@@ -1,7 +1,7 @@
 name: Run Otter Assign
 
 permissions:
-  contents: read # Grants read access to code and dependencies
+  contents: write # Grants read access to code and dependencies
   packages: write # (Optional) Add this if interacting with GitHub Packages or caches
   actions: write # (Optional) Add this if using `actions/cache`
 

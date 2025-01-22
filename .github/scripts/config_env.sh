@@ -7,6 +7,6 @@
 # The python requirements are cached by GH Actions.
 ###
 source venv/bin/activate
-python3 -m pip install --upgrade pip
-python3 -m pip install -r $REQUIREMENTS_FILE
+python3 -m pip install --cache-dir ~/.cache/pip --upgrade pip
+python3 -m pip install --cache-dir ~/.cache/pip -r $REQUIREMENTS_FILE
 python3 -m ipykernel install --user --name=python3 --display-name "Python (venv)"

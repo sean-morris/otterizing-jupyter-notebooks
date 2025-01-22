@@ -1,5 +1,10 @@
 name: Run Otter Assign
 
+permissions:
+  contents: read # Grants read access to code and dependencies
+  packages: write # (Optional) Add this if interacting with GitHub Packages or caches
+  actions: write # (Optional) Add this if using `actions/cache`
+
 on:
   push:
     branches:
@@ -30,24 +35,25 @@ jobs:
       with:
         fetch-depth: 0 
 
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    
     - name: Set GIT_SAFE_DIRS
       run: |
         export GIT_SAFE_DIRS="/__w/otterizing-jupyter-notebooks/otterizing-jupyter-notebooks"
         git config --global --add safe.directory /__w/otterizing-jupyter-notebooks/otterizing-jupyter-notebooks
 
+
     - name: Create virtual environment
       run: |
         python3 -m venv venv
         source venv/bin/activate
-    
-    - name: Cache pip
-      uses: actions/cache@v3
-      with:
-        path: venv
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/$REQUIREMENTS_FILE') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
-  
+      
     - name: Install Chromium via Playwright
       run: |
         playwright install chromium
@@ -55,6 +61,8 @@ jobs:
     - name: Config virtual environment
       run: |
         bash $SCRIPT_PATH/config_env.sh
+      env:
+        CACHE_DIR: ~/.cache/pip
     
     - name: Run otter assign changed subfolders
       run: |

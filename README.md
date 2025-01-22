@@ -1,5 +1,5 @@
 # otterizing-jupyter-notebooks
-This repo is a template for generating the student and autograder files Jupyter notebooks with (otter-grader)[https://otter-grader.readthedocs.io/en/latest/]. The GitHub Action defined in the .github/workflows directory determines if there are been any changes to Jupyter notebooks in the raw_notebooks folder when you make a commit. If there are changes then `otter assign` is executed for the notebook and the resulting files are pushed back to the folder, "generated_notebooks".
+This repo is a template for generating the student and autograder files Jupyter notebooks with (otter-grader)[https://otter-grader.readthedocs.io/en/latest/]. The GitHub Action defined in the .github/workflows directory determines if there are been any changes to Jupyter notebooks in the **raw_notebooks** folder when you make a commit. If there are changes then `otter assign` is executed for the notebook and the resulting files are pushed back to the folder, "generated_notebooks".
 
 # GH Action Workflow Permissions:
 In order to allow GH Action to commit back to your repository, you need to give permission:
@@ -16,4 +16,6 @@ In order to allow GH Action to commit back to your repository, you need to give 
 # Running locally
 - Install requirements.txt in virtual environment
 - Install (act)[https://nektosact.com/installation/index.html]
-- act -W .github/workflows/otter-assign.yaml
+- Command-line: act
+- This runs the workflow, otter-assign.yml.
+- Note that it will not use a local pip cache and will not attempt to git commit or git push back to the repository. If you study the workflow, you could change this local behavior.
